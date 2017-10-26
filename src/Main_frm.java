@@ -15,10 +15,18 @@ public class Main_frm extends JFrame {
     private JMenu jmG = new JMenu("Game");
     private JMenu jmA = new JMenu("About");
 
+    private JPanel jpnCal = new JPanel(new GridLayout(4,4));
+    private JTextField jtf = new JTextField();
+    private  JButton jbtnCal[] = new JButton[10];
+    private int data_cal[] = new int[10];
+    private Random rnd_Cal = new Random(System.currentTimeMillis());
+
     private JDesktopPane jdp = new JDesktopPane();
     private JMenuItem jMenuItemFExit = new JMenuItem("Exit");
     private JMenuItem jMenuItemFLotto = new JMenuItem("Lotto");
+    private JMenuItem jMenuItemCalculator = new JMenuItem("Calculator");
     private JInternalFrame jInternalFrame = new JInternalFrame();
+    private JInternalFrame jInternalFrame_cal = new JInternalFrame();
     private Container jifCP;
     private JPanel jpn = new JPanel(new GridLayout(1,6,5,5));
     private JPanel jpn1 = new JPanel(new GridLayout(1,2,5,5));
@@ -27,8 +35,11 @@ public class Main_frm extends JFrame {
     private int data[] = new int[6];
     private Random rnd = new Random(System.currentTimeMillis());
 
+
     private JButton jbtnClose = new JButton("Close");
     private JButton jbtnRegen = new JButton("Generate");
+    private JButton jbtnClose_Cal = new JButton("Close");
+    private JButton jbtnRegen_Cal = new JButton("Generate");
 
 
     private int frmW = 500, frmH = 450;
@@ -40,12 +51,14 @@ public class Main_frm extends JFrame {
     private void initComp(){
         this.setBounds(screenW/2-frmW/2,screenH/2-frmH/2,frmW,frmH);
         jInternalFrame.setBounds(0,0,200,100);
+        jInternalFrame_cal.setBounds(0,0,400,400);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setJMenuBar(jmb);
         this.setContentPane(jdp);
 
         jmF.add(jMenuItemFExit);
         jmG.add(jMenuItemFLotto);
+        jmG.add(jMenuItemCalculator);
         jmb.add(jmF);
         jmb.add(jmS);
         jmb.add(jmG);
@@ -60,6 +73,10 @@ public class Main_frm extends JFrame {
 
         jpn1.add(jbtnClose);
         jpn1.add(jbtnRegen);
+        jpnCal.add(jbtnClose_Cal);
+        jpnCal.add(jbtnRegen_Cal);
+        jpnCal.add(jtf);
+        jtf.setEditable(false);
 
         jMenuItemFExit.addActionListener(new ActionListener() {
             @Override
@@ -76,6 +93,13 @@ public class Main_frm extends JFrame {
                 jInternalFrame.setVisible(true);
             }
         });
+        jMenuItemCalculator.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jdp.add(jInternalFrame_cal);
+                jInternalFrame_cal.setVisible(true);
+            }
+        });
 
 
         jbtnClose.addActionListener(new ActionListener() {
@@ -88,6 +112,12 @@ public class Main_frm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lottoGenerate();
+            }
+        });
+        jbtnClose_Cal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jInternalFrame_cal.dispose();
             }
         });
 
@@ -113,6 +143,29 @@ public class Main_frm extends JFrame {
 
             }
         });
+        for(int i=0;i<10;i++){
+            jbtnCal[i] = new JButton();
+            jbtnCal[i].setFont(new Font(null,Font.PLAIN,18));
+            jbtnCal[i].setOpaque(true);
+            jbtnCal[i].setBackground(new Color(2,202,119));
+            jbtnCal[i].setHorizontalAlignment(JButton.CENTER);
+            jpnCal.add(jbtnCal[i]);
+            jbtnCal[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton tmpButton = (JButton) e.getSource();
+                    jtf.setText(jtf.getText()+tmpButton.getText());
+                }
+            });
+        }
+
+        calculatorGenerate();
+        jMenuItemCalculator.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculatorGenerate();
+            }
+        });
 
         jMenuItemFExit.setAccelerator(KeyStroke.getKeyStroke('X',Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
     }
@@ -134,6 +187,24 @@ public class Main_frm extends JFrame {
                 jlbs[i].setText(Integer.toString(data[i]));
                 i++;
             }
+        }
+    }
+
+    private void calculatorGenerate(){
+        int i =0;
+        while (i<10){
+            data_cal[i] = rnd_Cal.nextInt(10)+1;
+            int j =0;
+            boolean flag = true;
+            while (j<i && flag){
+                flag = false;
+            }
+            j++;
+            if (flag){
+                jbtnCal[i].setText(Integer.toString(data_cal[i]));
+                i++;
+        }
+
         }
     }
 
